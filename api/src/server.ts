@@ -13,6 +13,7 @@ async function bootstrap() {
     console.log("Database connected");
 
     await sequelize.sync();
+
     console.log("Database synchronized");
 
     app.listen(port, () => {

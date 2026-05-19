@@ -3,6 +3,14 @@ services:
     build: ./api
     ports:
       - "3000:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - POSTGRES_DB=study
+      - POSTGRES_PASSWORD=docker
+      - POSTGRES_USER=docker
+      - POSTGRES_HOST=database
+      - POSTGRES_PORT=5432
     depends_on:
       - database
     volumes:

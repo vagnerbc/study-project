@@ -1,0 +1,63 @@
+# Cada etapa é como se fosse um ambiente novo, então precisamos declarar de novo.
+
+
+#  Separado em layers (deps)
+# 1 - Instala dependencias
+
+# Não copiamos o projeto inteiro ainda porque queremos aproveitar cache do Docker.
+# Se o seu código mudar, mas o package.json não mudar, o Docker pode reaproveitar a camada do npm ci.
+
+# npm install - pode atualizar o package-lock
+# npm ci - instala exatamente o que está no package-lock, é mais previsível para build/CI/produção
+
+FROM node:20-alpine AS deps
+
+WORKDIR /app
+
+COPY package*json ./
+
+RUN npm ci
+
+
+#  Separado em layers (build)
+# 2 - Compila o codigo (Typescript para javascript)
+FROM node:20-alpine AS build
+
+WORKDIR /app
+
+COPY --from=deps /app/node_modules ./node_modules
+COPY . .
+
+RUN npm run build 
+
+#  Separado em layers (runner)
+# 3 - Gera imagem final de producao
+# A imagem final não precisa carregar TypeScript, tsx, nodemon, arquivos fonte, etc. 
+# Ela só precisa do JavaScript compilado e das dependências de produção.
+
+# NODE_ENV=production - Isso é importante porque várias libs mudam comportamento em produção.
+
+# npm ci --omit=dev - Instala somente dependências normais. - Ele ignora as devDependencies.
+
+# Copia somente a pasta compilada da etapa de build.
+
+# Faz o processo rodar com o usuário node, e não com root.
+# Isso é uma boa prática de segurança.
+# Se alguém explorar alguma falha na aplicação, o processo não estará rodando como superusuário dentro do container.
+
+# Documenta que a aplicação usa a porta 3000.
+FROM node:20-alpine AS runner
+
+ENV NODE_ENV=production
+
+COPY package*.json ./
+
+RUN npm ci --omit=dev
+
+COPY --from=build /app/dist ./dist
+
+USER node
+
+EXPOSE 3000
+
+CMD ["node", "dist/server.js"]

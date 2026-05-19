@@ -15,10 +15,12 @@ export class UserController {
   };
 
   create = async (req: Request, res: Response) => {
-    const body = req.body;
+    const { name, email, password } = req.body;
 
     const newUser = await this.userService.create({
-      name: body.name,
+      name,
+      email,
+      password,
     });
 
     res.json(newUser);

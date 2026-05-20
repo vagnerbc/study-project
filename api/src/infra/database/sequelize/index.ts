@@ -1,7 +1,5 @@
 import { Sequelize } from "sequelize";
 
-// const sequelize = new Sequelize('postgres://user:pass@example.com:5432/dbname')
-
 export const sequelize = new Sequelize({
   dialect: "postgres",
   database: process.env.POSTGRES_DATABASE || "study",

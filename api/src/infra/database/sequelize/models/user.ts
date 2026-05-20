@@ -1,13 +1,7 @@
-import { DataTypes, Model, Optional } from "sequelize";
-import { sequelize } from "../index";
 import bcrypt from "bcrypt";
-
-type UserAttributes = {
-  id: number;
-  name: string;
-  email: string;
-  password: string;
-};
+import { DataTypes, Model, Optional } from "sequelize";
+import { UserAttributes } from "../../../../modules/user/user.types";
+import { sequelize } from "../index";
 
 export type UserCreationAttributes = Optional<UserAttributes, "id">;
 

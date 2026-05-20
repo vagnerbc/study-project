@@ -4,9 +4,12 @@ import { UserService } from "./user.service";
 import { UserRepository } from "../../infra/database/sequelize/models/user";
 import { validationHandler } from "../../middlewares/validationHandler";
 import { createUserSchema } from "./user.schemas";
+import { UserCache } from "./user.cache";
+import { RedisClient } from "../../infra/cache/redis";
 
 const router = Router();
-const userService = new UserService(UserRepository);
+const userCache = new UserCache(RedisClient);
+const userService = new UserService(UserRepository, userCache);
 const userController = new UserController(userService);
 
 router.get("/", userController.findAll);

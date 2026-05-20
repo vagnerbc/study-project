@@ -1,5 +1,6 @@
-import { app } from "./app";
 import dotenv from "dotenv";
+import { app } from "./app";
+import { RedisClient } from "./infra/cache/redis";
 import { sequelize } from "./infra/database/sequelize";
 import "./infra/database/sequelize/models/user";
 
@@ -15,6 +16,8 @@ async function bootstrap() {
     await sequelize.sync();
 
     console.log("Database synchronized");
+
+    await RedisClient.connect();
 
     app.listen(port, () => {
       console.log(`Server is running on port ${port}`);

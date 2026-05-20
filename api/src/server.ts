@@ -10,6 +10,7 @@ const port = process.env.PORT || 3000;
 
 async function bootstrap() {
   try {
+    debugger;
     await sequelize.authenticate();
     console.log("Database connected");
 

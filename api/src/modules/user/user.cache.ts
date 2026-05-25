@@ -1,4 +1,5 @@
 import { RedisClient } from "../../infra/cache/redis";
+import { logger } from "../../middlewares/requestTracking";
 import { UserAttributes } from "./user.types";
 
 enum keys {
@@ -15,6 +16,10 @@ export class UserCache {
       return data ? JSON.parse(data) : null;
     } catch (error) {
       console.log("No users:all data cached", error);
+      logger.warn({
+        type: "cache",
+        method: "Users getAll",
+      });
     }
   }
 
@@ -30,6 +35,10 @@ export class UserCache {
       });
     } catch (error) {
       console.log("Error add users:all data to cache");
+      logger.warn({
+        type: "cache",
+        method: "Users addAll",
+      });
     }
   }
 
@@ -48,6 +57,10 @@ export class UserCache {
       });
     } catch (error) {
       console.log("Error add user data to cache");
+      logger.warn({
+        type: "cache",
+        method: "Users add",
+      });
     }
   }
 }

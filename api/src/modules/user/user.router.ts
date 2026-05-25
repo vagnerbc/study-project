@@ -6,6 +6,7 @@ import { validationHandler } from "../../middlewares/validationHandler";
 import { createUserSchema } from "./user.schemas";
 import { UserCache } from "./user.cache";
 import { RedisClient } from "../../infra/cache/redis";
+import { rateLimit } from "../../middlewares/rateLimit";
 
 const router = Router();
 const userCache = new UserCache(RedisClient);
@@ -16,6 +17,7 @@ router.get("/", userController.findAll);
 
 router.post(
   "/",
+  rateLimit(10),
   validationHandler({
     body: createUserSchema,
   }),

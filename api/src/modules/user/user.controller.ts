@@ -15,6 +15,10 @@ export class UserController {
   };
 
   create = async (req: Request, res: Response) => {
+    req.log.info({
+      requestId: req.requestId,
+      requestName: "Create user",
+    });
     const { name, email, password } = req.body;
 
     const newUser = await this.userService.create({

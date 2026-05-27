@@ -1,11 +1,7 @@
 import * as z from "zod";
 
 export const createUserSchema = z.object({
-  name: z
-    .string({
-      error: "Name is required",
-    })
-    .trim(),
+  name: z.string().trim().optional(),
   email: z.email("Email is required"),
   password: z.string(),
 });

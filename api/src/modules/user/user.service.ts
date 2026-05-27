@@ -34,7 +34,7 @@ export class UserService {
   async create(data: UserCreationAttributes) {
     const userAlreadyExists = await this.userRepository.findOne({
       where: {
-        name: data.name,
+        email: data.email,
       },
     });
 

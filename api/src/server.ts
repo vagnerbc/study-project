@@ -2,7 +2,7 @@ import dotenv from "dotenv";
 import { app } from "./app";
 import { RedisClient } from "./infra/cache/redis";
 import { sequelize } from "./infra/database/sequelize";
-import "./infra/database/sequelize/models/user";
+import "./infra/database/sequelize/models";
 
 dotenv.config();
 
@@ -14,7 +14,9 @@ async function bootstrap() {
     await sequelize.authenticate();
     console.log("Database connected");
 
-    await sequelize.sync();
+    await sequelize.sync({
+      alter: true,
+    });
 
     console.log("Database synchronized");
 

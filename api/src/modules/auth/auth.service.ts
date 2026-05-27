@@ -53,7 +53,7 @@ export class AuthService {
       throw new AppError("Invalid credentials");
     }
 
-    const isPasswordValid = compare(password, user.password);
+    const isPasswordValid = await compare(password, user.password);
 
     if (!isPasswordValid) {
       throw new AppError("Invalid credentials");

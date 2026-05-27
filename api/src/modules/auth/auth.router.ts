@@ -6,12 +6,13 @@ import { validationHandler } from "../../middlewares/validationHandler";
 import { createUserSchema } from "../user/user.schemas";
 import { AuthController } from "./auth.controller";
 import { AuthService } from "./auth.service";
+import { authHandler } from "../../middlewares/authHandler";
 
 const router = Router();
 const authService = new AuthService(UserRepository, RefreshTokenRepository);
 const authController = new AuthController(authService);
 
-router.get("/me", authController.me);
+router.get("/me", authHandler, authController.me);
 
 router.post(
   "/register",

@@ -93,7 +93,7 @@ export class AuthService {
     const payload = tokenService.verifyRefreshToken(refreshToken);
     const userId = Number(payload.sub);
 
-    const user = this.userRepository.findByPk(userId);
+    const user = await this.userRepository.findByPk(userId);
 
     if (!user) {
       throw new AppError("Invalid refresh token", 401);

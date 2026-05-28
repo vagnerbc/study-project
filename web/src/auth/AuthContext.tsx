@@ -54,7 +54,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     refreshSessionOnStart();
-  });
+  }, []);
 
   async function login(input: { email: string; password: string }) {
     const response = await api.post<{ accessToken: string }>(

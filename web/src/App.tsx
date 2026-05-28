@@ -4,6 +4,7 @@ import { HomePage } from "./pages/home/home";
 import { LoginPage } from "./pages/login/login";
 import { PublicPage } from "./pages/public/public";
 import { PrivateRoute } from "./secury/privateRoute";
+import { RegisterPage } from "./pages/register/register";
 
 export function App() {
   return (
@@ -11,6 +12,7 @@ export function App() {
       <Routes>
         <Route path="/" element={<PublicPage />} />
         <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
 
         <Route
           path="/app"

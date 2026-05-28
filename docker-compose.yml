@@ -3,8 +3,10 @@ services:
     build: ./web
     ports:
       - "5173:5173"
+    env_file:
+      - ./web/.env
     environment:
-      - VITE_API_URL=http://localhost:3000
+      VITE_API_URL: http://localhost:3000
     volumes:
       - ./web:/app
       - /app/node_modules
@@ -14,31 +16,30 @@ services:
     ports:
       - "3000:3000"
       - "9229:9229"
+    env_file:
+      - ./api/.env
     environment:
-      - NODE_ENV=development
-      - PORT=3000
-      - POSTGRES_DATABASE=study
-      - POSTGRES_PASSWORD=docker
-      - POSTGRES_USER=docker
-      - POSTGRES_HOST=database
-      - POSTGRES_PORT=5432
-      # redis
-      - REDIS_HOST=redis
-      - REDIS_PORT=6379
-      - REDIS_URL=redis://redis:6379
-      - JWT_SECRET=123456789
+      NODE_ENV: development
+      PORT: 3000
+      POSTGRES_HOST: database
+      POSTGRES_PORT: 5432
+      REDIS_HOST: redis
+      REDIS_PORT: 6379
+      REDIS_URL: redis://redis:6379
+      WEB_URL: http://localhost:5173
     depends_on:
       - database
       - redis
     volumes:
       - ./api:/app
       - /app/node_modules
+
   database:
     image: postgres:16-alpine
     environment:
-      - POSTGRES_DB=study
-      - POSTGRES_PASSWORD=docker
-      - POSTGRES_USER=docker
+      POSTGRES_DB: study
+      POSTGRES_PASSWORD: docker
+      POSTGRES_USER: docker
     ports:
       - "5432:5432"
     volumes:
@@ -57,6 +58,7 @@ services:
     restart: always
     ports:
       - "8080:8080"
+
 volumes:
   pg_data:
   redis_data:

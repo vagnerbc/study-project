@@ -2,6 +2,7 @@ import type { AxiosError } from "axios";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { useAuth } from "../../auth/AuthContext";
+import { useNavigate } from "react-router-dom";
 
 type RegisterFormData = {
   name: string;
@@ -13,6 +14,8 @@ type RegisterFormData = {
 export function RegisterPage() {
   const { register: registerUser } = useAuth();
   const [serverError, setServerError] = useState<string | null>(null);
+
+  const navigate = useNavigate();
 
   const {
     register,
@@ -32,6 +35,8 @@ export function RegisterPage() {
         email: data.email,
         password: data.password,
       });
+
+      navigate("/app");
     } catch (error) {
       const axiosError = error as AxiosError<{ message: string }>;
       setServerError(

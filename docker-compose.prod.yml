@@ -1,24 +1,39 @@
 services:
+  web:
+    build:
+      context: ./web
+      dockerfile: Dockerfile.prod
+      args:
+        VITE_API_URL: /api
+    ports:
+      - "80:80"
+    depends_on:
+      - api
+    restart: unless-stopped
+
   api:
     build:
       context: ./api
       dockerfile: Dockerfile.prod
-    ports:
-      - "3000:3000"
+    env_file:
+      - ./api/.env
     depends_on:
       - database
+      - redis
     environment:
+      # Overrides necessários porque dentro do Compose os hosts são os nomes dos serviços.
       NODE_ENV: production
       PORT: 3000
-      POSTGRES_DATABASE: study
-      POSTGRES_USER: docker
-      POSTGRES_PASSWORD: docker
       POSTGRES_HOST: database
       POSTGRES_PORT: 5432
-      # redis
       REDIS_HOST: redis
       REDIS_PORT: 6379
       REDIS_URL: redis://redis:6379
+      WEB_URL: http://localhost
+    expose:
+      # Disponibiliza a porta apenas para outros containers; não publica no host.
+      - "3000"
+    restart: unless-stopped
 
   database:
     image: postgres:16-alpine
@@ -28,12 +43,12 @@ services:
       POSTGRES_PASSWORD: docker
     volumes:
       - pg_data:/var/lib/postgresql/data
+    restart: unless-stopped
 
   redis:
     image: redis:8-alpine
-    ports:
-      - "6379:6379"
     volumes:
+      # Redis não precisa ficar público em produção; só a API acessa pela rede interna.
       - redis_data:/data
     restart: unless-stopped
 

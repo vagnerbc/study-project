@@ -34,6 +34,6 @@ router.post(
 
 router.post("/logout", authController.logout);
 
-router.post("/refresh", authController.refreshSession);
+router.post("/refresh", rateLimit(10), authController.refreshSession);
 
 export { router as authRouter };

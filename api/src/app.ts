@@ -15,6 +15,8 @@ import { workerThreadsRouter } from "./modules/workerThreads/threads.router";
 
 export const app = express();
 
+app.set("trust proxy", 1);
+
 const httpLogger = pinoHttp({
   logger: logger,
 });

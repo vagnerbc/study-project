@@ -3,8 +3,9 @@ import "./App.css";
 import { HomePage } from "./pages/home/home";
 import { LoginPage } from "./pages/login/login";
 import { PublicPage } from "./pages/public/public";
-import { PrivateRoute } from "./secury/privateRoute";
 import { RegisterPage } from "./pages/register/register";
+import { SimpleImport } from "./pages/simpleImport";
+import { PrivateRoute } from "./secury/privateRoute";
 
 export function App() {
   return (
@@ -19,6 +20,15 @@ export function App() {
           element={
             <PrivateRoute>
               <HomePage />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/simple-import"
+          element={
+            <PrivateRoute>
+              <SimpleImport />
             </PrivateRoute>
           }
         />

@@ -10,6 +10,7 @@ import { errorHandler } from "./middlewares/errorHandler";
 import { notFoundHandler } from "./middlewares/notFoundHandler";
 import { logger } from "./middlewares/requestTracking";
 import { authRouter } from "./modules/auth/auth.router";
+import { importsRouter } from "./modules/imports/imports.routes";
 import { userRouter } from "./modules/user/user.router";
 import { workerThreadsRouter } from "./modules/workerThreads/threads.router";
 
@@ -58,6 +59,7 @@ app.use("/users", userRouter);
 
 app.use(authHandler);
 app.use("/worker-threads", workerThreadsRouter);
+app.use("/imports", importsRouter);
 
 app.use(notFoundHandler);
 app.use(errorHandler);

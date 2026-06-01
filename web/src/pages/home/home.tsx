@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { useAuth } from "../../auth/AuthContext";
 
 export function HomePage() {
@@ -10,7 +11,21 @@ export function HomePage() {
       <p>Olá, {user?.name}</p>
       <p>E-mail: {user?.email}</p>
 
-      <button onClick={logout}>Sair</button>
+      <section className="flex flex-row gap-4">
+        <h2>Menu</h2>
+        <ul>
+          <li>
+            <Link to="/app">Home</Link>
+          </li>
+          <li>
+            <Link to="/simple-import">Simple Import</Link>
+          </li>
+        </ul>
+      </section>
+
+      <section>
+        <button onClick={logout}>Sair</button>
+      </section>
     </main>
   );
 }

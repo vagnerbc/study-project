@@ -1,8 +1,18 @@
 import multer from "multer";
+import { mkdirSync } from "node:fs";
+
+const UPLOAD_DIR = "/tmp/my-uploads";
+const CSV_MIME_TYPES = new Set([
+  "text/csv",
+  "text/plain",
+  "application/csv",
+  "application/vnd.ms-excel",
+]);
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, "/tmp/my-uploads");
+    mkdirSync(UPLOAD_DIR, { recursive: true });
+    cb(null, UPLOAD_DIR);
   },
   filename: function (req, file, cb) {
     const uniqueSuffix = Date.now() + "-" + Math.round(Math.random() * 1e9);
@@ -19,7 +29,9 @@ const fileFilter = (
   file: Express.Multer.File,
   cb: multer.FileFilterCallback,
 ) => {
-  if (file.mimetype === "text/csv") {
+  const isCsvExtension = file.originalname.toLowerCase().endsWith(".csv");
+
+  if (isCsvExtension && CSV_MIME_TYPES.has(file.mimetype)) {
     cb(null, true);
   } else {
     cb(new Error("Only CSV files are allowed"));

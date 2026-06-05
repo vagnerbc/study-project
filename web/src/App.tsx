@@ -4,6 +4,7 @@ import { LoginPage } from "./pages/login/login";
 import { PublicPage } from "./pages/public/public";
 import { RegisterPage } from "./pages/register/register";
 import { SimpleImport } from "./pages/simpleImport";
+import { StreamImport } from "./pages/streamImport";
 import { PrivateRoute } from "./secury/privateRoute";
 
 export function App() {
@@ -28,6 +29,15 @@ export function App() {
           element={
             <PrivateRoute>
               <SimpleImport />
+            </PrivateRoute>
+          }
+        />
+
+        <Route
+          path="/simple-import-stream"
+          element={
+            <PrivateRoute>
+              <StreamImport />
             </PrivateRoute>
           }
         />

@@ -39,10 +39,10 @@ export function LoginPage() {
   }
 
   return (
-    <main className="flex min-h-screen items-center justify-center bg-slate-100 px-4">
-      <div className="w-full max-w-md rounded-2xl bg-white p-8 shadow-lg">
-        <h1 className="mb-2 text-2xl font-bold text-slate-900">Login</h1>
-        <p className="mb-6 text-sm text-slate-500">
+    <main className="app-shell flex items-center justify-center">
+      <div className="auth-card">
+        <h1 className="mb-2 text-2xl font-bold">Login</h1>
+        <p className="auth-description">
           Entre com sua conta para continuar.
         </p>
 
@@ -55,7 +55,7 @@ export function LoginPage() {
             <input
               id="email"
               type="email"
-              className="w-full rounded-lg border border-slate-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+              className="form-input"
               {...register("email", {
                 required: "Email is required",
                 pattern: {
@@ -83,7 +83,7 @@ export function LoginPage() {
             <input
               id="password"
               type="password"
-              className="w-full rounded-lg border border-slate-300 px-3 py-2 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
+              className="form-input"
               {...register("password", {
                 required: "Password is required",
               })}
@@ -97,7 +97,7 @@ export function LoginPage() {
           </div>
 
           {serverError && (
-            <div className="rounded-lg bg-red-50 p-3 text-sm text-red-700">
+            <div className="status-box status-error">
               {serverError}
             </div>
           )}
@@ -105,7 +105,7 @@ export function LoginPage() {
           <button
             type="submit"
             disabled={isSubmitting}
-            className="w-full rounded-lg bg-blue-600 px-4 py-2 font-medium text-white transition hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-60"
+            className="primary-button w-full"
           >
             {isSubmitting ? "Entrando..." : "Login"}
           </button>

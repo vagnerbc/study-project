@@ -3,7 +3,6 @@ import {
   useContext,
   useEffect,
   useState,
-  type ReactElement,
   type ReactNode,
 } from "react";
 
@@ -20,7 +19,7 @@ type ThemeContextType = {
 const getInitialTheme = () => {
   const localTheme = localStorage.getItem("theme");
 
-  if (localTheme) {
+  if (localTheme === "light" || localTheme === "dark") {
     return localTheme as ThemeType;
   }
 
@@ -45,6 +44,7 @@ export function ThemeProvider({ children }: { children: ReactNode }) {
 
   useEffect(() => {
     document.documentElement.setAttribute("data-theme", theme);
+    document.documentElement.style.colorScheme = theme;
     localStorage.setItem("theme", theme);
   }, [theme]);
 

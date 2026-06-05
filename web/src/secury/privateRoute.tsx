@@ -6,7 +6,13 @@ export function PrivateRoute({ children }: { children: JSX.Element }) {
   const { user, loading } = useAuth();
 
   if (loading) {
-    return <p>Loading ...</p>;
+    return (
+      <main className="app-shell">
+        <div className="page-container">
+          <p>Loading...</p>
+        </div>
+      </main>
+    );
   }
 
   if (!user) {

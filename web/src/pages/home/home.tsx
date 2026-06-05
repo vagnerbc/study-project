@@ -4,36 +4,57 @@ import { useTheme } from "../../theme/useTheme";
 
 export function HomePage() {
   const { user, logout } = useAuth();
-  const { toggleTheme } = useTheme();
+  const { isDark, toggleTheme } = useTheme();
 
   return (
-    <main style={{ maxWidth: 800, margin: "80px auto" }}>
-      <h1>Área protegida</h1>
+    <main className="app-shell">
+      <div className="page-container">
+        <header className="dashboard-header">
+          <div>
+            <span className="eyebrow">Area protegida</span>
+            <h1>Imports</h1>
+            <p>
+              Ola, {user?.name}. Escolha uma estrategia para importar produtos
+              por CSV.
+            </p>
+          </div>
 
-      <p>Olá, {user?.name}</p>
-      <p>E-mail: {user?.email}</p>
+          <div className="header-actions">
+            <button className="secondary-button" onClick={toggleTheme}>
+              {isDark ? "Tema claro" : "Tema escuro"}
+            </button>
+            <button className="secondary-button" onClick={logout}>
+              Sair
+            </button>
+          </div>
+        </header>
 
-      <section className="flex flex-row gap-4">
-        <button className="p-2 bg-cyan-600" onClick={() => toggleTheme()}>
-          Toggle Theme
-        </button>
-      </section>
+        <section className="user-strip">
+          <span>{user?.email}</span>
+        </section>
 
-      <section className="flex flex-row gap-4">
-        <h2>Menu</h2>
-        <ul>
-          <li>
-            <Link to="/app">Home</Link>
-          </li>
-          <li>
-            <Link to="/simple-import">Simple Import</Link>
-          </li>
-        </ul>
-      </section>
+        <section className="import-grid">
+          <Link className="import-card" to="/simple-import">
+            <span className="strategy-badge">Full file</span>
+            <h2>Importacao simples</h2>
+            <p>
+              Le o arquivo inteiro, valida as linhas e persiste tudo de uma vez.
+              Boa para estudar o fluxo base e arquivos pequenos.
+            </p>
+            <span className="card-action">Abrir tela</span>
+          </Link>
 
-      <section>
-        <button onClick={logout}>Sair</button>
-      </section>
+          <Link className="import-card" to="/simple-import-stream">
+            <span className="strategy-badge">Stream + batch</span>
+            <h2>Importacao com stream</h2>
+            <p>
+              Processa o CSV linha a linha, salva em lotes e permite rollback em
+              caso de erro de validacao.
+            </p>
+            <span className="card-action">Abrir tela</span>
+          </Link>
+        </section>
+      </div>
     </main>
   );
 }

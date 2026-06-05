@@ -1,8 +1,10 @@
 import { Link } from "react-router-dom";
 import { useAuth } from "../../auth/AuthContext";
+import { useTheme } from "../../theme/useTheme";
 
 export function HomePage() {
   const { user, logout } = useAuth();
+  const { toggleTheme } = useTheme();
 
   return (
     <main style={{ maxWidth: 800, margin: "80px auto" }}>
@@ -10,6 +12,12 @@ export function HomePage() {
 
       <p>Olá, {user?.name}</p>
       <p>E-mail: {user?.email}</p>
+
+      <section className="flex flex-row gap-4">
+        <button className="p-2 bg-cyan-600" onClick={() => toggleTheme()}>
+          Toggle Theme
+        </button>
+      </section>
 
       <section className="flex flex-row gap-4">
         <h2>Menu</h2>

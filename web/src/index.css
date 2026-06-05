@@ -1,1 +1,23 @@
 @import "tailwindcss";
+
+@import "./theme/theme.css";
+
+body {
+  background-color: var(--primary-background-color);
+}
+
+span,
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  color: var(--primary-text-color);
+}
+
+a,
+button {
+  color: var(--primary-color);
+}

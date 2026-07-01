@@ -12,24 +12,9 @@ import { products } from "./products";
 }
  */
 
-const ecommerceSummary = orders.reduce(
-  (acc, order) => {
+const report = orders.reduce(
+  (acc: any, order) => {
     acc.totalOrders++;
-
-    if (order.status === "paid") {
-      acc.paidOrders++;
-
-      const orderTotal = order.items.reduce((total, item) => {
-        return total + item.quantity * item.unitPrice;
-      }, 0);
-
-      const orderItemsQuantity = order.items.reduce((total, item) => {
-        return total + item.quantity;
-      }, 0);
-
-      acc.totalRevenue += orderTotal;
-      acc.totalItemsSold += orderItemsQuantity;
-    }
 
     if (order.status === "pending") {
       acc.pendingOrders++;
@@ -37,6 +22,18 @@ const ecommerceSummary = orders.reduce(
 
     if (order.status === "cancelled") {
       acc.cancelledOrders++;
+    }
+
+    if (order.status === "paid") {
+      acc.paidOrders++;
+
+      acc.totalRevenue += order.items.reduce((prev, item) => {
+        return prev + item.quantity * item.unitPrice;
+      }, 0);
+
+      acc.totalItemsSold += order.items.reduce((prev, item) => {
+        return prev + item.quantity;
+      }, 0);
     }
 
     return acc;
@@ -51,6 +48,4 @@ const ecommerceSummary = orders.reduce(
   },
 );
 
-console.log({
-  ecommerceSummary,
-});
+console.log({ report });

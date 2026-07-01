@@ -28,16 +28,17 @@ import { users } from "./users";
 ]
  */
 
-const clientsByClientId = users.reduce((acc: any, user) => {
+const userByUserId = users.reduce((acc: any, user) => {
   acc[user.id] = user;
+
   return acc;
 }, {});
 
-const salesByClientId = orders.reduce((acc: any, order) => {
+const ordersByUserId = orders.reduce((acc: any, order) => {
   if (!acc[order.userId]) {
     acc[order.userId] = {
       userId: order.userId,
-      name: clientsByClientId[order.userId]?.name || "",
+      name: userByUserId[order.userId].name ?? "",
       totalOrders: 0,
       totalPaidOrders: 0,
       totalSpent: 0,
@@ -50,17 +51,13 @@ const salesByClientId = orders.reduce((acc: any, order) => {
     acc[order.userId].totalPaidOrders++;
 
     acc[order.userId].totalSpent += order.items.reduce((prev, item) => {
-      prev += item.quantity * item.unitPrice;
-
-      return prev;
+      return prev + item.quantity * item.unitPrice;
     }, 0);
   }
 
   return acc;
-}, []);
+}, {});
 
-const report = Object.values(salesByClientId);
+const report = Object.values(ordersByUserId);
 
-console.log({
-  report,
-});
+console.log({ report });

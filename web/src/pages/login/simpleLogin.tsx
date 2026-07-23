@@ -1,143 +1,139 @@
-import { useState } from "react";
-import { useAuth } from "../../auth/AuthContext";
-import type { AxiosError } from "axios";
+import React, { useCallback, useState } from "react";
 
-type ValidationErrors = {
-  email: string | undefined;
-  password: string | undefined;
-  repeatPassword: string | undefined;
+type Errors = {
+  email?: string;
+  password?: string;
 };
 
-let initialValidationError = {} as ValidationErrors;
+type LoginResponse = {
+  accessToken: string;
+  message?: string;
+};
 
-export function SimpleLoginPage() {
-  const { login } = useAuth();
-
-  const [email, setEmail] = useState<string>("");
-  const [password, setPassword] = useState<string>("");
-  const [repeatPassword, setRepeatPassword] = useState<string>("");
+function SimpleLogin() {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
 
   const [loading, setLoading] = useState(false);
-  const [validationError, setValidationError] = useState<ValidationErrors>(
-    initialValidationError,
-  );
+  const [errors, setErrors] = useState<Errors | null>(null);
+  const [error, setError] = useState("");
 
-  const [error, setError] = useState<string | null>(null);
-
-  const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    try {
-      setLoading(true);
-
-      const isValid = validateSubmit();
-
-      if (!isValid) {
-        setLoading(false);
-        return;
-      }
-
-      await login({
-        email,
-        password,
-      });
-    } catch (error) {
-      const axiosError = error as AxiosError<{ message: string }>;
-
-      const message = axiosError.response?.data.message;
-      setError(message || "Email or password invalid");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const validateSubmit = () => {
-    if (!email) {
-      setValidationError((value) => ({
-        ...value,
-        email: "Email is required",
-      }));
-      return false;
+  const validate = () => {
+    let validationErrors: Errors = {};
+    let isValid = true;
+    if (!email || !email.trim()) {
+      validationErrors.email = "Email is required";
+      isValid = false;
     }
 
     if (!password) {
-      setValidationError((value) => ({
-        ...value,
-        password: "Password is required",
-      }));
-      return false;
+      validationErrors.password = "Password is required";
+      isValid = false;
     }
 
-    if (!repeatPassword) {
-      setValidationError((value) => ({
-        ...value,
-        repeatPassword: "Repeat password is required",
-      }));
-      return false;
-    }
-
-    if (password !== repeatPassword) {
-      setValidationError((value) => ({
-        ...value,
-        repeatPassword: "Repeat password invalid",
-      }));
-      return false;
-    }
-
-    return true;
+    setErrors(validationErrors);
+    return isValid;
   };
 
+  const submit = useCallback(
+    async (e: React.SubmitEvent<HTMLFormElement>) => {
+      e.preventDefault();
+
+      setErrors(null);
+      setError("");
+
+      const isValid = validate();
+
+      if (!isValid) {
+        return;
+      }
+
+      try {
+        setLoading(true);
+
+        const response = await fetch(
+          `${import.meta.env.VITE_API_URL}/auth/login`,
+          {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            credentials: "include",
+            body: JSON.stringify({
+              email,
+              password,
+            }),
+          },
+        );
+
+        const data = (await response.json()) as LoginResponse;
+
+        if (!response.ok) {
+          throw new Error(data.message || "Email or password invalid!");
+        }
+
+        console.log(data.accessToken);
+      } catch (error: any) {
+        console.log("Error while loging");
+        setError(error.message);
+      } finally {
+        setLoading(false);
+      }
+    },
+    [validate],
+  );
+
   return (
-    <div>
-      <div>
-        <form onSubmit={handleSubmit}>
-          <div>
+    <div className="login">
+      <div className="container">
+        <div className="header">Enter credentials to login</div>
+
+        <form onSubmit={(e) => submit(e)}>
+          <div className="field">
             <label htmlFor="email">Email</label>
             <input
-              type="text"
-              name="email"
+              type="email"
               id="email"
+              name="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => {
+                setEmail(e.target.value);
+              }}
+              aria-invalid={Boolean(errors?.email)}
+              aria-describedby={errors?.email ? "email-error" : undefined}
             />
 
-            <div>
-              <p>{validationError?.email}</p>
-            </div>
+            {errors?.email && (
+              <div id="email-error" className="error" role="alert">
+                {errors.email}
+              </div>
+            )}
           </div>
 
-          <div>
+          <div className="field">
             <label htmlFor="password">Password</label>
             <input
               type="password"
-              name="password"
               id="password"
+              name="password"
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => {
+                setPassword(e.target.value);
+              }}
+              aria-invalid={Boolean(errors?.password)}
+              aria-describedby={errors?.password ? "password-error" : undefined}
             />
-            <div>
-              <p>{validationError?.password}</p>
-            </div>
+
+            {errors?.password && (
+              <div id="password-error" className="error" role="alert">
+                {errors.password}
+              </div>
+            )}
           </div>
 
-          <div>
-            <label htmlFor="repeatPassword">Repeat Password</label>
-            <input
-              type="repeatPassword"
-              name="repeatPassword"
-              id="repeatPassword"
-              value={repeatPassword}
-              onChange={(e) => setRepeatPassword(e.target.value)}
-            />
-            <div>
-              <p>{validationError?.repeatPassword}</p>
-            </div>
-          </div>
+          <div className="field">
+            {error && <div className="error">{error}</div>}
 
-          <div>
-            <div>
-              <p>{error}</p>
-            </div>
             <button type="submit" disabled={loading}>
               Login
             </button>
@@ -147,3 +143,5 @@ export function SimpleLoginPage() {
     </div>
   );
 }
+
+export default SimpleLogin;

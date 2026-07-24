@@ -22,18 +22,12 @@ export function ShoppingCartPage() {
     dispatch({ type: "ADD_ITEM", payload: item });
   };
 
-  const handleRemoveItem = (id: number) => {
-    dispatch({ type: "REMOVE_ITEM", payload: { id } });
+  const handleRemoveItem = (id: string) => {
+    dispatch({ type: "REMOVE_ITEM", id });
   };
 
-  const handleUpdateQuantity = (id: number, quantity: number) => {
-    dispatch({
-      type: "UPDATE_QUANTITY",
-      payload: {
-        id,
-        quantity,
-      },
-    });
+  const handleUpdateQuantity = (id: string, quantity: number) => {
+    dispatch({ type: "UPDATE_QUANTITY", payload: { id, quantity } });
   };
 
   const handleClearCart = () => {
@@ -51,16 +45,7 @@ export function ShoppingCartPage() {
               <span>
                 {product.name} — R$ {product.price}{" "}
               </span>
-              <button
-                onClick={() =>
-                  handleAddItem({
-                    id: product.id,
-                    name: product.name,
-                    price: product.price,
-                    quantity: 1,
-                  })
-                }
-              >
+              <button onClick={() => handleAddItem(product)}>
                 Adicionar ao Carrinho
               </button>
             </li>
